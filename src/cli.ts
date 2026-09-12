@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { writeFileSync } from "node:fs";
 import { reviewRepository } from "./core.js";
+import { GitInspectionError } from "./git.js";
 
 type Args = {
   command: string;
@@ -46,6 +47,10 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error("Fatal error:", error);
+  if (error instanceof GitInspectionError) {
+    console.error(error.message);
+  } else {
+    console.error("Fatal error:", error);
+  }
   process.exitCode = 1;
 });
